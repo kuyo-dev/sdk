@@ -1,6 +1,6 @@
 {
   "name": "@kuyo/sdk",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "description": "Kuyo SDK - Performance monitoring and error tracking",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",

@@ -13,10 +13,20 @@ export class KuyoPerformance {
 
   constructor() {}
 
+  private log(message: string, isError = false): void {
+    if (this.core.config.debug) {
+      const logMethod = isError ? console.error : console.log;
+      logMethod(`[Kuyo:Performance] ${message}`);
+    } else {
+      console.log(`[Kuyo:Performance] ${message}`);
+    }
+  }
+
   /**
    * Initialize the performance plugin
    */
   public setup(core?: any): void {
+    this.log("[Kuyo:Performance] Setting up performance plugin");
     if (this.isInitialized) {
       return;
     }
@@ -26,8 +36,10 @@ export class KuyoPerformance {
 
     // Check if we're in browser or Node.js environment
     if (typeof window !== "undefined") {
+      this.log("[Kuyo:Performance] Browser environment detected");
       this.trackBrowserEnv();
     } else {
+      this.log("[Kuyo:Performance] Node.js environment detected");
       this.trackNodeEnv();
     }
 
@@ -55,8 +67,10 @@ export class KuyoPerformance {
    * Start batch sending every 5 minutes
    */
   private startBatchSending(): void {
+    this.log("[Kuyo:Performance] Starting batch sending");
     // Send batches every 5 minutes
     this.batchInterval = setInterval(() => {
+      this.log("[Kuyo:Performance] Flushing all metrics");
       this.flushAllMetrics();
     }, 5 * 60 * 1000); // 5 minutes
 
@@ -139,7 +153,7 @@ export class KuyoPerformance {
    * Track performance in Node.js environment
    */
   private trackNodeEnv(): void {
-    console.log("[Kuyo:Performance] Node.js environment detected");
+    this.log("[Kuyo:Performance] Node.js environment detected");
 
     // Start monitoring Node.js performance metrics
     this.startNodeMetricsMonitoring();
@@ -184,7 +198,9 @@ export class KuyoPerformance {
     });
 
     if (this.core?.config?.debug) {
-      console.log("[Kuyo:Performance] Node.js metrics:", metrics);
+      this.log(
+        "[Kuyo:Performance] Node.js metrics: " + JSON.stringify(metrics)
+      );
     }
   }
 
@@ -272,7 +288,7 @@ export class KuyoPerformance {
       });
 
       if (this.core?.config?.debug) {
-        console.log(`[Kuyo:Performance] Process exiting with code: ${code}`);
+        this.log(`[Kuyo:Performance] Process exiting with code: ${code}`);
       }
 
       this.teardown();
@@ -288,7 +304,7 @@ export class KuyoPerformance {
       });
 
       if (this.core?.config?.debug) {
-        console.log("[Kuyo:Performance] Uncaught exception:", error.message);
+        this.log("[Kuyo:Performance] Uncaught exception: " + error.message);
       }
     });
 
@@ -302,7 +318,7 @@ export class KuyoPerformance {
       });
 
       if (this.core?.config?.debug) {
-        console.log("[Kuyo:Performance] Unhandled promise rejection:", reason);
+        this.log("[Kuyo:Performance] Unhandled promise rejection: " + reason);
       }
     });
 
@@ -316,7 +332,7 @@ export class KuyoPerformance {
       });
 
       if (this.core?.config?.debug) {
-        console.log("[Kuyo:Performance] Process warning:", warning.message);
+        this.log("[Kuyo:Performance] Process warning: " + warning.message);
       }
     });
   }

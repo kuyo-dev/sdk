@@ -27,7 +27,11 @@ export class KuyoCore {
     this.transport = new FetchTransport(this.config, this.endpoint);
     this.log("Kuyo Core initialized");
 
+    this.log("Plugins: " + this.config.plugins.join(", "));
+    this.log("Config: " + JSON.stringify(this.config));
+
     if (this.config.plugins.includes("performance")) {
+      this.log("Performance plugin enabled");
       this.performance = new KuyoPerformance();
       this.performance.setup(this);
     }
@@ -41,6 +45,10 @@ export class KuyoCore {
     this.adapter = adapter;
     this.adapter.setup();
     this.log(`Adapter registered: ${adapter.name}`);
+  }
+
+  public getAdapter(): KuyoAdapter | null {
+    return this.adapter;
   }
 
   public getConfig(): KuyoConfig {
